@@ -83,8 +83,10 @@ router.post('/messageResponse',function(req,res,next){
         DB.find('t_messages',jsonStr).then(message=>{  
             console.log(message,'message')
         username=message[0].username
-
-        let json={author:username,
+        
+        let json={
+            messageid:result.id,
+            author:username,
             admin:result.admin,
             content:result.content,
             createTime:date_02(new Date())}  
@@ -100,5 +102,34 @@ router.post('/messageResponse',function(req,res,next){
  });
 })  
 })
-
+/**论坛数据 */
+router.post('/getForumData',function(req,res,next){
+    var data={
+        pageIndex:req.body.pageIndex,
+        pageSize:req.body.pageSize,  
+    }
+    var collectionName='t_message_response';
+    let json={}
+    var item=[]
+    DB.findAll(collectionName,json,data.pageSize,data.pageIndex).then(resultList=>{
+    console.log('find',resultList)
+    for(i in resultList){
+        item.push(resultList[i].messageid)
+    }
+    console.log(item,'item router api')
+    var obj=[]
+    var tname='t_messages';
+    DB.findByIn(tname,item).then(messages=>{
+        console.log('in' ,messages)
+    obj.push(data.station_name) 
+    obj.push(stationList)         
+    console.log(obj,'obj')
+    res.send(JSON.stringify({code:200,message:"查询成功",stationList:obj,type:'success'}));  
+    }).catch(err=>{
+        res.send(JSON.stringify({code:400,message:"查询失败"+err,type:'error'}));       
+    })     
+    }).catch(err=>{
+        res.send(JSON.stringify({code:400,message:"查询失败"+err,type:'error'}));  
+    })
+    })
 module.exports=router

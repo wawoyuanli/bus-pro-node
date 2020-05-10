@@ -1,6 +1,5 @@
 const MongoClient=require('mongodb').MongoClient;
 const Config=require('./config.js');
-var ObjectID = require('mongodb').ObjectID;
 class DB{
     static getInstance(){
         if(!DB.instance){
@@ -274,7 +273,7 @@ findByStationName(collectionName,json) {
  findByIn(tname,item) {
     return new Promise((resolve, reject) => {
         console.log('db item',item)
-        this.connect().then(db => {
+        this.connect().then(db => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             const collection = db.collection(tname);
             //db.t_lines.find({line_name:{$in:["402路","403路"]}})
             collection.find({"line_name":{$in:item}}).toArray((err, docs) => {
