@@ -85,11 +85,11 @@ router.post('/messageResponse',function(req,res,next){
         username=message[0].username
         
         let json={
-            messageid:result.id,
-            author:username,
-            admin:result.admin,
-            content:result.content,
-            createTime:date_02(new Date())}  
+            messageid:result.id, //留言id
+            author:username,  //留言用户
+            admin:result.admin,  //回复此留言的管理员
+            content:result.content, //回复内容
+            createTime:date_02(new Date())}   
 
    DB.insert(collectionName,json).then(count=>{
   if(count.insertedCount>0){

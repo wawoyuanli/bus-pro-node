@@ -7,6 +7,7 @@ var formidable = require('formidable'); //上传功能的插件
 var path = require('path')
 var fs = require("fs");
 
+// upload
 router.post("/uploadImage",function (req,res) {
   var form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
