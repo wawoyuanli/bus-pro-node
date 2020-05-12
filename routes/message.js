@@ -102,32 +102,37 @@ router.post('/messageResponse',function(req,res,next){
  });
 })  
 })
-/**论坛数据 */
+/**论坛数据  message/getForumData*/
 router.post('/getForumData',function(req,res,next){
     var data={
         pageIndex:req.body.pageIndex,
         pageSize:req.body.pageSize,  
     }
+    console.log(data,'论坛数据')
     var collectionName='t_message_response';
     let json={}
     var item=[]
-    DB.findAll(collectionName,json,data.pageSize,data.pageIndex).then(resultList=>{
-    console.log('find',resultList)
-    for(i in resultList){
-        item.push(resultList[i].messageid)
-    }
-    console.log(item,'item router api')
+    var sortName='createTime'
+    DB.findAll(collectionName,json,data.pageSize,data.pageIndex,sortName).then(resultList=>{
+    console.log('回复数据',resultList)
+    var messageArr=[]
+    messageArr.push(resultList[0].messageid)
+    // resultList.forEach(element => {
+    //     // messageArr.push('ObjectId'+'('+element.messageid+')')
+    //     messageArr.push(element.messageid)
+    // })
+    console.log(messageArr,'messageArr')
     var obj=[]
     var tname='t_messages';
-    DB.findByIn(tname,item).then(messages=>{
-        console.log('in' ,messages)
-    obj.push(data.station_name) 
-    obj.push(stationList)         
+    DB.findByIds(tname,messageArr).then(res=>{
+        console.log('in' ,res)
+    obj.push(res.station_name) 
+    // obj.push(stationList)         
     console.log(obj,'obj')
-    res.send(JSON.stringify({code:200,message:"查询成功",stationList:obj,type:'success'}));  
+    res.send(JSON.stringify({code:200,message:"查询成功",stationList:resultList,type:'success'}));  
     }).catch(err=>{
         res.send(JSON.stringify({code:400,message:"查询失败"+err,type:'error'}));       
-    })     
+    })    
     }).catch(err=>{
         res.send(JSON.stringify({code:400,message:"查询失败"+err,type:'error'}));  
     })

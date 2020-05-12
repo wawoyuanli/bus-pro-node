@@ -14,7 +14,7 @@ class DB{
     }
        //根据配置连接数据库
        connect() {
-        const client = new MongoClient(Config.dbUrl,{ useNewUrlParser: true });
+        const client = new MongoClient(Config.dbUrl,{ useNewUrlParser: true,  useUnifiedTopology: true });
         return new Promise((resolve, reject) => {
             if (!this.dbClient) {
                 // const client = new MongoClient(Config.dbUrl);
@@ -272,11 +272,30 @@ findByStationName(collectionName,json) {
  /**in */
  findByIn(tname,item) {
     return new Promise((resolve, reject) => {
-        console.log('db item',item)
+        console.log('字段--多值查询',item)
         this.connect().then(db => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             const collection = db.collection(tname);
             //db.t_lines.find({line_name:{$in:["402路","403路"]}})
             collection.find({"line_name":{$in:item}}).toArray((err, docs) => {
+                if (err) {
+                    reject(err);
+                    return
+                }
+            console.log('开始数据查询--in--');
+               resolve(docs);
+            });
+        }).catch(error => {
+            reject(error)
+        });
+    });
+}
+findByIds(tname,item) {
+    return new Promise((resolve, reject) => {
+        console.log('字段--多值查询',item[0])
+        this.connect().then(db => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+            const collection = db.collection(tname);
+            //db.t_lines.find({line_name:{$in:["402路","403路"]}})
+            collection.find({"_id":{$in:[ObjectId(item[0]+'')]}}).toArray((err, docs) => {
                 if (err) {
                     reject(err);
                     return

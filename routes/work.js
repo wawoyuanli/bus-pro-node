@@ -15,7 +15,7 @@ router.post("/uploadImage",function (req,res) {
   form.maxFieldsSize = 2 * 1024 * 1024;
   //处理图片
   form.parse(req, function (err, fields, files){
-   //   console.log(files,'-------files 属性-------');
+     console.log(req,'-------req属性-------');
       console.log(files.file.name,'-------files 属性name-------');
 
       var filename = files.file.name
@@ -46,6 +46,7 @@ router.post('/addWorkInfo',function(req,res,next){
     department:req.body.department,
     content:req.body.content
   }
+  console.log(requestData,'添加工作信息')
    DB.find('t_works',{name:requestData.name,content:requestData.content}).then(data=>{
       console.log(data,data.length)
      if(data.length>0){

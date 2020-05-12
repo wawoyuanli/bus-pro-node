@@ -13,7 +13,7 @@ router.post('/addUser',function(req,res,next){
     username:req.body.username,
     password:req.body.password
   }
- 
+ console.log(userInfo,'注册请求数据')
    DB.find('t_users',{username:userInfo.username }).then(data=>{
      console.log(data,data.length)
      if(data.length>0){
