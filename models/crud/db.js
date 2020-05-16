@@ -82,6 +82,7 @@ class DB{
     }
     //查询
     find(collectionName,json) {
+        console.log(json,'find')
         return new Promise((resolve, reject) => {
             this.connect().then(db => {
                 const collection = db.collection(collectionName);
@@ -108,7 +109,7 @@ class DB{
         return new Promise((resolve, reject) => {
             this.connect().then(db => {
                 const collection = db.collection(collectionName);
-                collection.find(json).skip((pageIndex-1)*pageSize).limit(pageSize).sort({'line_name':1,'index':1,}).toArray((err, docs) => {
+                collection.find(json).skip((pageIndex-1)*pageSize).limit(pageSize).sort({'line_name':1,'index':1}).toArray((err, docs) => {
                     if (err) {
                         reject(err);
                         return
@@ -281,7 +282,7 @@ findByStationName(collectionName,json) {
                     reject(err);
                     return
                 }
-            console.log('开始数据查询--in--');
+               console.log('开始数据查询--in--');
                resolve(docs);
             });
         }).catch(error => {
@@ -295,7 +296,7 @@ findByIds(tname,item) {
         this.connect().then(db => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             const collection = db.collection(tname);
             //db.t_lines.find({line_name:{$in:["402路","403路"]}})
-            collection.find({"_id":{$in:[ObjectId(item[0]+'')]}}).toArray((err, docs) => {
+            collection.find({"messageid":{$in:item}}).toArray((err, docs) => {
                 if (err) {
                     reject(err);
                     return
@@ -308,6 +309,25 @@ findByIds(tname,item) {
         });
     });
 }
+
+findByStation(collectionName,json1,json2) {
+    console.log(json2,json1,' findByStation')
+    return new Promise((resolve, reject) => {
+        this.connect().then(db => {
+            const collection = db.collection(collectionName);
+            collection.find({$or:[json1,json2]}).toArray((err, docs) => {
+                if (err) {
+                    reject(err);
+                    return
+                }
+            //    console.log('开始数据查询，find');
+               resolve(docs);
+            });
+        }).catch(error => {
+            reject(error)
+        });
+    });
+ }
 }
 
 module.exports=DB.getInstance();
